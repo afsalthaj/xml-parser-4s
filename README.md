@@ -19,10 +19,10 @@ object XmlObject {
   final case class Text(value: String) extends XmlObject
 
   final case class TagElement(
-                               name: String,
-                               attributes: Chunk[Attribute],
-                               children: XmlObject
-                             ) extends XmlObject
+    name: String,
+    attributes: Chunk[Attribute],
+    children: XmlObject
+  ) extends XmlObject
 }
 
 ```
