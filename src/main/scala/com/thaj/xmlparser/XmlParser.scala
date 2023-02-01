@@ -87,7 +87,18 @@ object TestApp extends App {
        |
        |""".stripMargin
 
-  println(xmlParser.parseString(nextTest))
+  println(xmlParser.parseString(nextTest).map(_.flattened))
+
+//  Right(
+//    HashMap(
+//      Chunk(KeyName(simpletag), KeyName(sub2)) -> text2,
+//      Chunk(KeyName(simpletag), KeyName(a)) -> a,
+//      Chunk(KeyName(simpletag), KeyName(sub2), KeyName(a)) -> b,
+//      Chunk(KeyName(simpletag), KeyName(sub3), KeyName(a)) -> c,
+//      Chunk(KeyName(simpletag), KeyName(sub1)) -> text1,
+//      Chunk(KeyName(simpletag), KeyName(sub3)) -> text3
+//    )
+//  )
 
   val html =
     s"""
@@ -101,6 +112,6 @@ object TestApp extends App {
        |
        |""".stripMargin
 
-  println(xmlParser.parseString(html))
+  println(xmlParser.parseString(html).map(_.flattened))
 
 }

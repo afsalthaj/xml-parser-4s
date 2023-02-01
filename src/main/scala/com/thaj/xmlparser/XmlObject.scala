@@ -4,7 +4,36 @@ import zio.Chunk
 
 // To be moved to zio-parser
 sealed trait XmlObject {
-  def flattened: Map[Chunk[KeyComponent], String] = ???
+  def flattened: Map[Chunk[KeyComponent], String] = {
+    def go(
+        xmlObject: XmlObject,
+        path: Chunk[KeyComponent]
+    ): Map[Chunk[KeyComponent], String] =
+      xmlObject match {
+        case XmlObject.Text(value) => Map(path -> value)
+        case XmlObject.TagElement(name, attributes, children) =>
+          val parentNewPath = path ++ Chunk(KeyComponent.KeyName(name))
+
+          val attributesMap: Map[Chunk[KeyComponent], String] =
+            attributes
+              .map({ case (key, value) =>
+                val subNewPath =
+                  parentNewPath ++ Chunk(KeyComponent.KeyName(key))
+                subNewPath -> value
+              })
+              .toMap
+
+          val childrenMap = children
+            .map(go(_, parentNewPath))
+            .reduceOption(_ ++ _)
+            .getOrElse(Map.empty)
+
+          attributesMap ++ childrenMap
+      }
+
+    go(this, Chunk.empty)
+
+  }
 }
 
 object XmlObject {
