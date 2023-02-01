@@ -26,36 +26,48 @@ object Components extends App with Parsers {
       .zip(ws)
       .zip(attributeValueParser)
 
-  def openTag: Parser[String, Char, Unit] =
+  def openAngular: Parser[String, Char, Unit] =
     Parser.charIn('<').unit
 
-  def closedTag: Parser[String, Char, Unit] =
+  def closedAngular: Parser[String, Char, Unit] =
     Parser.charIn('>').unit
 
-  def tagParser: Parser[String, Char, String] =
-    openTag
+  def closedTag =
+    Parser
+      .charIn('<')
+      .zip(Parser.charIn('/'))
       .zip(ws)
       .zip(tagIdentifier)
       .zip(ws)
-      .zip(closedTag)
-      .map(_.mkString)
+      .zip(closedAngular)
+
+  lazy val tagContent =
+    tagParser_.orElseEither(textParser.zip(ws)).map(_.merge)
 
   lazy val tagParser_ : Parser[
     String,
     Char,
     XmlObject
   ] = {
-    ws.zip(openTag)
+    ws.zip(openAngular)
       .zip(ws)
       .zip(tagIdentifier)
       .zip(ws)
-      .zip(attributeParser.zip(ws).repeat)
+      .zip(attributeParser.zip(ws).repeat0)
+      .zip(ws)
+      .zip(closedAngular)
+      .zip(ws)
+      .zip(tagContent)
       .zip(ws)
       .zip(closedTag)
       .zip(ws)
-      .zip(tagParser_.orElseEither(textParser.zip(ws)))
-      .map({ case (name, attributes, either) =>
-        TagElement(name, attributes, either.merge)
+      .transformEither({
+        case (name, attributes, xmlObject, (_, _, closedTag)) =>
+          if (name == closedTag) {
+            Right(TagElement(name, attributes, xmlObject))
+          } else {
+            Left(s"Closed tag ${closedTag} is not the same as open tag ${name}")
+          }
       })
   }
 
@@ -69,7 +81,7 @@ object Components extends App with Parsers {
   val str =
     s"""
        |
-       |<head key=\"value\" key=\"value2\"> hello
+       |<head key=\"value\" key=\"value2\"> hello </head>
        |
        |""".stripMargin
 
