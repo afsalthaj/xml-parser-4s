@@ -44,8 +44,8 @@ object Components extends App with Parsers {
     String,
     Char,
     XmlObject
-  ] =
-    openTag
+  ] = {
+    ws.zip(openTag)
       .zip(ws)
       .zip(tagIdentifier)
       .zip(ws)
@@ -53,10 +53,11 @@ object Components extends App with Parsers {
       .zip(ws)
       .zip(closedTag)
       .zip(ws)
-      .zip(tagParser_.orElseEither(textParser))
+      .zip(tagParser_.orElseEither(textParser.zip(ws)))
       .map({ case (name, attributes, either) =>
         TagElement(name, attributes, either.merge)
       })
+  }
 
   lazy val xmlParser = tagParser_
 
@@ -65,8 +66,16 @@ object Components extends App with Parsers {
       .parseString("key=\"value\"")
   )
 
+  val str =
+    s"""
+       |
+       |<head key=\"value\" key=\"value2\"> hello
+       |
+       |""".stripMargin
+
   println(
     tagParser_
-      .parseString("< head key=\"value\" key=\"value2\"> hello")
+      .parseString(str)
   )
+
 }

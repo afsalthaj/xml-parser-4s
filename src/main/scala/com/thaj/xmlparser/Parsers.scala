@@ -12,9 +12,9 @@ trait Parsers {
       .map({ case (_, b, _) => b.mkString })
 
   def nonWS: Parser[String, Char, Chunk[Char]] =
-    Parser.charNotIn(' ').repeat
+    Parser.charNotIn(' ', '\n').repeat
 
   def ws: Parser[String, Char, Unit] =
-    Parser.charIn(' ').repeat0.unit
+    Parser.charIn(' ', '\n').repeat0.unit
 
 }
