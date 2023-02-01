@@ -4,7 +4,7 @@ A highly simplified xml-parser,
 to avoid external library dependencies
 in zio-config. The parser will be designed
 in a way to work seamlessly with zio-config's
-language assumptions.
+language assumptions. The parser will be moved to zio-parser library.
 
 In a nutshell, a xml parsed object is as simple as
 
