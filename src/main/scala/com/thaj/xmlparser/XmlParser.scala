@@ -91,10 +91,14 @@ object TestApp extends App {
 
   val html =
     s"""
-       |<body >
-       | <p style =    "color:red"> test
-       | </p>
-       |</body>
+       |<aaa
+       |aaa
+       |="aaa"
+       |
+       |
+       |></aaa
+       |>
+       |
        |""".stripMargin
 
   println(xmlParser.parseString(html))

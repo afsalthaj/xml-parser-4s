@@ -14,10 +14,13 @@ sealed trait Space {
 
 object Space {
   val gen: Gen[Any, Space] =
+    gen(0)
+
+  def gen(minSpace: Int): Gen[Any, Space] =
     for {
-      totalNextLine <- Gen.int(0, 100).map(NextLine)
-      totalWhiteSpace <- Gen.int(0, 100).map(WhiteSpace)
-      spaces <- Gen.chunkOfBounded(0, 10)(
+      totalNextLine <- Gen.int(minSpace, 1).map(NextLine)
+      totalWhiteSpace <- Gen.int(minSpace, 1).map(WhiteSpace)
+      spaces <- Gen.chunkOfBounded(minSpace, 2)(
         Gen.oneOf(Gen.const(totalNextLine), Gen.const(totalWhiteSpace))
       )
     } yield Multiple(spaces)

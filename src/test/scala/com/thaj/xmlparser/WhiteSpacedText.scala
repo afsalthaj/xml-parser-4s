@@ -8,10 +8,13 @@ final case class WhiteSpacedText(value: String) {
 }
 
 object WhiteSpacedText {
-  def gen =
+  val gen: Gen[Any, WhiteSpacedText] =
+    gen(0, 0)
+
+  def gen(minPreSpace: Int, minPostSpace: Int): Gen[Any, WhiteSpacedText] =
     for {
-      start <- Space.gen
-      stop <- Space.gen
+      start <- Space.gen(minPreSpace)
+      stop <- Space.gen(minPostSpace)
       chars <- Gen.chunkOfN(30)(Gen.char)
       text = prefixEscape(chars).mkString.trim
       withSpaces = s"${start}${text}${stop}"

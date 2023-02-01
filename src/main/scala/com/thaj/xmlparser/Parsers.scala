@@ -19,7 +19,7 @@ trait Parsers {
     Parser.charIn(' ', '\n').repeat0.unit
 
   lazy val tagIdentifier =
-    Parser.charNotIn('<', '>', ' ').repeat.map(_.mkString.trim)
+    Parser.charNotIn('<', '>', ' ', '\n').repeat.map(_.mkString.trim)
 
   def textParser =
     Parser.charNotIn('<', '>', '=').repeat.map(s => Text(s.mkString.trim))

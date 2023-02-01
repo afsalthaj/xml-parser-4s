@@ -9,8 +9,8 @@ object AdditionSpec extends ZIOSpecDefault {
     suite("Xml parser spec")(
       test("test most simplest xml") {
         check(
-          Tags.gen,
-          Space.gen
+          Tags.gen.noShrink,
+          Space.gen.noShrink
         ) { (tags, space) =>
           val config =
             s"${tags.openTag}${space}${tags.closingTag}"
