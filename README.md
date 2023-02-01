@@ -21,7 +21,7 @@ object XmlObject {
   final case class TagElement(
     name: String,
     attributes: Chunk[Attribute],
-    children: XmlObject
+    children: Chunk[XmlObject]
   ) extends XmlObject
 }
 
