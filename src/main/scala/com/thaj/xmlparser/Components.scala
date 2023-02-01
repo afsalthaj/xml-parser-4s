@@ -42,9 +42,9 @@ object Components extends App with Parsers {
       .zip(closedAngular)
 
   lazy val tagContent =
-    tagParser_.orElseEither(textParser.zip(ws)).map(_.merge)
+    xmlParser.orElseEither(textParser.zip(ws)).map(_.merge)
 
-  lazy val tagParser_ : Parser[
+  lazy val xmlParser: Parser[
     String,
     Char,
     XmlObject
@@ -71,8 +71,6 @@ object Components extends App with Parsers {
       })
   }
 
-  lazy val xmlParser = tagParser_
-
   println(
     attributeParser
       .parseString("key=\"value\"")
@@ -86,8 +84,20 @@ object Components extends App with Parsers {
        |""".stripMargin
 
   println(
-    tagParser_
+    xmlParser
       .parseString(str)
   )
+
+  val nextTest =
+    s"""
+       | <simpletag a = "a">
+       |   test
+       | </simpletag>
+       |
+       |
+       |
+       |""".stripMargin
+
+  println(xmlParser.parseString(nextTest))
 
 }
