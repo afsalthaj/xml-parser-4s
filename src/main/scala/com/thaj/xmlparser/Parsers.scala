@@ -10,7 +10,7 @@ trait Parsers {
       .charIn('"')
       .zip(Parser.charNotIn('"').repeat)
       .zip(Parser.charIn('"'))
-      .map({ case (_, b, _) => b.mkString })
+      .map({ case (_, b, _) => b.mkString.trim })
 
   def nonWS: Parser[String, Char, Chunk[Char]] =
     Parser.charNotIn(' ', '\n').repeat
@@ -19,16 +19,16 @@ trait Parsers {
     Parser.charIn(' ', '\n').repeat0.unit
 
   lazy val tagIdentifier =
-    Parser.charNotIn('<', '>', ' ').repeat.map(_.mkString)
+    Parser.charNotIn('<', '>', ' ').repeat.map(_.mkString.trim)
 
   def textParser =
-    Parser.charNotIn('<', '>', ' ', '=').repeat.map(s => Text(s.mkString))
+    Parser.charNotIn('<', '>', '=').repeat.map(s => Text(s.mkString.trim))
 
   lazy val attrKeyParser: Parser[String, Char, String] =
     Parser
       .charNotIn(' ', '=')
       .repeat
-      .map(_.mkString)
+      .map(_.mkString.trim)
 
   lazy val attributeValueParser: Parser[String, Char, String] =
     stringLiteral
