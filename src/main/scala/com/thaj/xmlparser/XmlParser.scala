@@ -1,47 +1,11 @@
 package com.thaj.xmlparser
 
-import com.thaj.xmlparser.XmlObject.{TagElement, Text}
+import com.thaj.xmlparser.XmlObject.{TagElement}
+import com.thaj.xmlparser.XmlParser.{attributeParser, xmlParser}
 import zio.parser.Parser
 
-object Components extends App with Parsers {
-  lazy val tagIdentifier =
-    Parser.charNotIn('<', '>', ' ').repeat.map(_.mkString)
-
-  def textParser =
-    Parser.charNotIn('<', '>', ' ', '=').repeat.map(s => Text(s.mkString))
-
-  lazy val attrKeyParser: Parser[String, Char, String] =
-    Parser
-      .charNotIn(' ', '=')
-      .repeat
-      .map(_.mkString)
-
-  lazy val attributeValueParser =
-    stringLiteral
-
-  lazy val attributeParser =
-    attrKeyParser
-      .zip(ws)
-      .zip(Parser.charIn('=').unit)
-      .zip(ws)
-      .zip(attributeValueParser)
-
-  def openAngular: Parser[String, Char, Unit] =
-    Parser.charIn('<').unit
-
-  def closedAngular: Parser[String, Char, Unit] =
-    Parser.charIn('>').unit
-
-  def closedTag =
-    Parser
-      .charIn('<')
-      .zip(Parser.charIn('/'))
-      .zip(ws)
-      .zip(tagIdentifier)
-      .zip(ws)
-      .zip(closedAngular)
-
-  lazy val tagContent =
+object XmlParser extends Parsers {
+  lazy val tagContent: Parser[String, Char, XmlObject] =
     xmlParser.orElseEither(textParser.zip(ws)).map(_.merge)
 
   lazy val xmlParser: Parser[
@@ -71,6 +35,10 @@ object Components extends App with Parsers {
       })
   }
 
+}
+
+object TestApp extends App {
+
   println(
     attributeParser
       .parseString("key=\"value\"")
@@ -91,7 +59,9 @@ object Components extends App with Parsers {
   val nextTest =
     s"""
        | <simpletag a = "a">
-       |   test
+       |   <hello>
+       |     well
+       |   </hello>
        | </simpletag>
        |
        |
