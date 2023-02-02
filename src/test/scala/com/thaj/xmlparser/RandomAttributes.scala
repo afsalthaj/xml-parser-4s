@@ -7,9 +7,9 @@ final case class RandomAttributes private (value: List[String]) {
 }
 
 object RandomAttributes {
-  def gen: Gen[Any, RandomAttributes] =
+  def gen(minNumberOfAttributes: Int, maxNumberOfAttributes: Int): Gen[Any, RandomAttributes] =
     for {
-      numberOfAttributes <- Gen.int(0, 10)
+      numberOfAttributes <- Gen.int(minNumberOfAttributes, maxNumberOfAttributes)
       randomAttributes <- Gen.listOfN(numberOfAttributes)(RandomAttribute.gen)
       spaces <- Gen.listOfN(numberOfAttributes)(Space.gen(1))
       value = randomAttributes

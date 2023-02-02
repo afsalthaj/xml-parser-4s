@@ -1,22 +1,23 @@
 package com.thaj.xmlparser
 
 final case class OpenTag(
-    whiteSpacedOpenBracket: String,
-    text: WhiteSpacedText,
-    attributes: RandomAttributes,
-    whiteSpacedClosingBracket: String
+  whiteSpacedOpenBracket: String,
+  text: WhiteSpacedText,
+  attributes: RandomAttributes,
+  whiteSpacedClosingBracket: String
 ) {
-  override def toString: String = {
-    s"${whiteSpacedOpenBracket}${text}${attributes}${whiteSpacedClosingBracket}"
-  }
+
+  override def toString: String =
+    s"$whiteSpacedOpenBracket$text$attributes$whiteSpacedClosingBracket"
 
 }
 
 object OpenTag {
-  def gen =
+
+  def gen(minNumberOfAttributes: Int, maxNumberOfAttributes: Int) =
     for {
       start <- Bracket.Open.gen
-      attributes <- RandomAttributes.gen
+      attributes <- RandomAttributes.gen(minNumberOfAttributes, maxNumberOfAttributes)
       text <- WhiteSpacedText.gen(
         minPreSpace = 0,
         minPostSpace = if (attributes.value.isEmpty) 0 else 1

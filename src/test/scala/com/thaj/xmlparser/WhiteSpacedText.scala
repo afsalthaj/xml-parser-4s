@@ -1,6 +1,5 @@
 package com.thaj.xmlparser
 
-import zio.Chunk
 import zio.test.Gen
 
 final case class WhiteSpacedText(value: String) {
@@ -8,6 +7,7 @@ final case class WhiteSpacedText(value: String) {
 }
 
 object WhiteSpacedText {
+
   val gen: Gen[Any, WhiteSpacedText] =
     gen(0, 0)
 
@@ -16,14 +16,8 @@ object WhiteSpacedText {
       start <- Space.gen(minPreSpace)
       stop <- Space.gen(minPostSpace)
       chars <- Gen.chunkOfN(30)(Gen.char)
-      text = prefixEscape(chars).mkString.trim
-      withSpaces = s"${start}${text}${stop}"
+      text = chars.filterNot(InvalidTextCharacters.list.contains).mkString.trim
+      withSpaces = s"$start$text$stop"
     } yield WhiteSpacedText(withSpaces)
-
-  def prefixEscape(chars: Chunk[Char]): Chunk[Char] =
-    chars.flatMap(char =>
-      if (InvalidTextCharacters.list.contains(char)) Chunk('\\', char)
-      else Chunk(char)
-    )
 
 }

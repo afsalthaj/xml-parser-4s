@@ -6,6 +6,7 @@ import zio.Chunk
 import zio.parser.Parser
 
 object XmlParser extends Parsers {
+
   lazy val tagContent: Parser[String, Char, Option[Chunk[XmlObject]]] =
     xmlParser.repeat
       .orElseEither(textParser.zip(ws).map(Chunk(_)))
@@ -16,7 +17,7 @@ object XmlParser extends Parsers {
     String,
     Char,
     XmlObject
-  ] = {
+  ] =
     ws.zip(openAngular)
       .zip(ws)
       .zip(tagIdentifier)
@@ -29,21 +30,19 @@ object XmlParser extends Parsers {
       .zip(ws)
       .zip(closedTag)
       .zip(ws)
-      .transformEither({
-        case (name, attributes, xmlObject, (_, _, closedTag)) =>
-          if (name == closedTag) {
-            Right(
-              TagElement(
-                name,
-                attributes,
-                Chunk.fromIterable(xmlObject).flatten
-              )
+      .transformEither { case (name, attributes, xmlObject, (_, _, closedTag)) =>
+        if (name == closedTag) {
+          Right(
+            TagElement(
+              name,
+              attributes,
+              Chunk.fromIterable(xmlObject).flatten
             )
-          } else {
-            Left(s"Closed tag ${closedTag} is not the same as open tag ${name}")
-          }
-      })
-  }
+          )
+        } else {
+          Left(s"Closed tag $closedTag is not the same as open tag $name")
+        }
+      }
 
   def parse(string: String): Either[Parser.ParserError[String], XmlObject] =
     xmlParser.parseString(string)
@@ -102,12 +101,12 @@ object TestApp extends App {
 
   val html =
     s"""
-       |<aaa
+       |<aa\\<aa
        |aaa
        |="aaa"
        |
        |
-       |></aaa
+       |></aa\\<aa
        |>
        |
        |""".stripMargin

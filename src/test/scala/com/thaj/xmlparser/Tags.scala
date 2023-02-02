@@ -1,18 +1,23 @@
 package com.thaj.xmlparser
 
-import com.thaj.xmlparser.XmlObject.Attribute
+import com.thaj.xmlparser.Tags.Children
 import zio.Chunk
 import zio.test.Gen
 
 final case class Tags(
-    openTag: OpenTag,
-    closingTag: ClosingTag
+  openTag: OpenTag,
+  body: Option[Children],
+  closingTag: ClosingTag
 )
 
 object Tags {
-  val gen: Gen[Any, Tags] =
+
+  final case class Children(body: Either[WhiteSpacedText, Chunk[Tags]])
+
+  def gen(numberOfAttributes: Int, maxNumberOfAttributes: Int) =
     for {
-      open <- OpenTag.gen
+      open <- OpenTag.gen(numberOfAttributes, maxNumberOfAttributes)
+      children <- Gen.option(WhiteSpacedText.gen.map(value => Children(Left(value))))
       closed <- ClosingTag.gen(open.text)
-    } yield Tags(open, closed)
+    } yield Tags(open, children, closed)
 }

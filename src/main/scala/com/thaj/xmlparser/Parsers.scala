@@ -5,12 +5,13 @@ import zio.Chunk
 import zio.parser.Parser
 
 trait Parsers {
+
   def stringLiteral: Parser[String, Char, String] =
     Parser
       .charIn('"')
       .zip(Parser.charNotIn('"').repeat)
       .zip(Parser.charIn('"'))
-      .map({ case (_, b, _) => b.mkString.trim })
+      .map { case (_, b, _) => b.mkString.trim }
 
   def nonWS: Parser[String, Char, Chunk[Char]] =
     Parser.charNotIn(' ', '\n').repeat
@@ -18,8 +19,9 @@ trait Parsers {
   def ws: Parser[String, Char, Unit] =
     Parser.charIn(' ', '\n').repeat0.unit
 
-  lazy val tagIdentifier =
+  lazy val tagIdentifier = {
     Parser.charNotIn('<', '>', ' ', '\n').repeat.map(_.mkString.trim)
+  }
 
   def textParser =
     Parser.charNotIn('<', '>', '=').repeat.map(s => Text(s.mkString.trim))
