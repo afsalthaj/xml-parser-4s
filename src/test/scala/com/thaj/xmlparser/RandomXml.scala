@@ -11,7 +11,7 @@ final case class RandomXml(
   closingTag: ClosingTag
 ) {
 
-  def emptyChildren =
+  def emptyChildren: RandomXml =
     copy(body = None)
 
   def toXmlObject: XmlObject = {

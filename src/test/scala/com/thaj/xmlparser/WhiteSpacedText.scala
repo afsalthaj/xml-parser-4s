@@ -18,7 +18,7 @@ object WhiteSpacedText {
     for {
       start <- Space.gen(minPreSpace)
       stop <- Space.gen(minPostSpace)
-      chars <- Gen.chunkOfN(30)(Gen.const('a'))
+      chars <- Gen.chunkOfN(30)(Gen.char)
       text = chars.filterNot(InvalidTextCharacters.list.contains).mkString.trim
     } yield WhiteSpacedText(start, text, stop)
 
