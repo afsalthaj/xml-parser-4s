@@ -2,31 +2,40 @@ package com.thaj.xmlparser.generators
 
 import com.thaj.xmlparser.XmlObject
 import com.thaj.xmlparser.XmlObject.TagElement
-import com.thaj.xmlparser.generators.RandomXml.Children
+import com.thaj.xmlparser.generators.WhiteSpacedXml.Children
 import zio.Chunk
 import zio.test.Gen
 
-final case class RandomXml(
-  openTag: OpenTag,
+final case class WhiteSpacedXml(
+  openTag: WhiteSpacedOpenTag,
   body: Option[Children],
-  closingTag: ClosingTag
+  closingTag: WhiteSpacedClosingTag
 ) { self =>
 
-  def print(space: Space): String = {
-    def go(randomXml: RandomXml): String =
+  def print(space: Space): String =
+    Printer.print(
+      self.openTag.print,
+      space.print,
+      self.printChildren(space),
+      space.print,
+      self.closingTag.print
+    )
+
+  private def printChildren(space: Space): String = {
+    def go(randomXml: WhiteSpacedXml): String =
       randomXml.body match {
         case Some(children) =>
           children.value match {
             case Left(whitSpacedText) => whitSpacedText.value
-            case Right(randomXmls) => randomXmls.map(go).mkString(space.toString)
+            case Right(randomXmls) => randomXmls.map(_.print(space)).mkString(space.print)
           }
-        case None => space.toString
+        case None => space.print
       }
 
     go(self)
   }
 
-  def emptyChildren: RandomXml =
+  def emptyChildren: WhiteSpacedXml =
     copy(body = None)
 
   def toXmlObject: XmlObject = {
@@ -49,14 +58,14 @@ final case class RandomXml(
   }
 }
 
-object RandomXml {
+object WhiteSpacedXml {
 
-  final case class Children(value: Either[WhiteSpacedText, Chunk[RandomXml]])
+  final case class Children(value: Either[WhiteSpacedText, Chunk[WhiteSpacedXml]])
 
-  def gen(numberOfAttributes: Int, maxNumberOfAttributes: Int) =
+  def gen(minAttributes: Int, maxAttributes: Int) =
     for {
-      open <- OpenTag.gen(numberOfAttributes, maxNumberOfAttributes)
+      open <- WhiteSpacedOpenTag.gen(minAttributes, maxAttributes)
       children <- Gen.option(WhiteSpacedText.gen.map(value => Children(Left(value))))
-      closed <- ClosingTag.gen(open.text)
-    } yield RandomXml(open, children, closed)
+      closed <- WhiteSpacedClosingTag.gen(open.text)
+    } yield WhiteSpacedXml(open, children, closed)
 }

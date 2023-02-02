@@ -4,7 +4,7 @@ import com.thaj.xmlparser.XmlObject
 import zio.test.Gen
 
 final case class WhiteSpacedText(preSpace: Space, value: String, postSpace: Space) {
-  override def toString: String = s"$preSpace$value$postSpace"
+  def print: String = Printer.print(preSpace.print, value, postSpace.print)
 
   def toXmlObjectText: XmlObject =
     XmlObject.Text(value)

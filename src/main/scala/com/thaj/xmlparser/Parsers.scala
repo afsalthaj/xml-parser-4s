@@ -11,7 +11,7 @@ trait Parsers {
       .charIn('"')
       .zip(Parser.charNotIn('"').repeat)
       .zip(Parser.charIn('"'))
-      .map { case (_, b, _) => b.mkString.trim }
+      .map { case (_, b, _) => b.mkString }
 
   def nonWS: Parser[String, Char, Chunk[Char]] =
     Parser.charNotIn(' ', '\n').repeat

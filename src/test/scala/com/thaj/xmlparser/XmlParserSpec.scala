@@ -1,50 +1,54 @@
 package com.thaj.xmlparser
 
-import com.thaj.xmlparser.generators.{RandomXml, Space}
+import com.thaj.xmlparser.generators.{Printer, Space, WhiteSpacedXml}
 import zio.test._
 import zio.test.Assertion._
 
-object AdditionSpec extends ZIOSpecDefault {
+object XmlParserSpec extends ZIOSpecDefault {
 
   def spec =
     suite("Xml parser spec")(
       test("test xml with zero children and with zero attributes") {
         check(
-          RandomXml.gen(0, 0).noShrink,
+          WhiteSpacedXml.gen(0, 0).map(_.emptyChildren).noShrink,
           Space.gen.noShrink
-        ) { (randomXml, space) =>
+        ) { (simpleXml, space) =>
           val config =
-            s"${randomXml.openTag}$space${randomXml.closingTag}"
+            simpleXml.print(space)
+
+          println(config)
 
           val parsed = XmlParser.parse(config)
 
-          assert(parsed)(equalTo(Right(randomXml.emptyChildren.toXmlObject)))
+          assert(parsed)(equalTo(Right(simpleXml.toXmlObject)))
         }
       },
       test("test xml with attributes with no children") {
         check(
-          RandomXml.gen(1, 10).noShrink,
+          WhiteSpacedXml.gen(1, 10).map(_.emptyChildren).noShrink,
           Space.gen.noShrink
-        ) { (randomXml, space) =>
+        ) { (xmlWithAttributes, space) =>
           val config =
-            s"${randomXml.openTag}$space${randomXml.closingTag}"
+            xmlWithAttributes.print(space)
+
+          println(config)
 
           val parsed = XmlParser.parse(config)
 
-          assert(parsed)(equalTo(Right(randomXml.emptyChildren.toXmlObject)))
+          assert(parsed)(equalTo(Right(xmlWithAttributes.toXmlObject)))
         }
       },
       // The round trip test that test any XML!
       test("test any xml with or without attributes, with or without children") {
         check(
-          RandomXml.gen(1, 10).noShrink,
+          WhiteSpacedXml.gen(1, 10).noShrink,
           Space.gen.noShrink
-        ) { (randomXml, space) =>
+        ) { (anyXml, space) =>
           val config =
-            s"${randomXml.openTag}$space${randomXml.print(space)}$space${randomXml.closingTag}"
+            anyXml.print(space)
 
           val parsed = XmlParser.parse(config)
-          val expected = randomXml.toXmlObject
+          val expected = anyXml.toXmlObject
 
           assert(parsed)(equalTo(Right(expected)))
         }
