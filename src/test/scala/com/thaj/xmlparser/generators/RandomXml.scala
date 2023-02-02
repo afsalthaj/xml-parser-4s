@@ -10,7 +10,21 @@ final case class RandomXml(
   openTag: OpenTag,
   body: Option[Children],
   closingTag: ClosingTag
-) {
+) { self =>
+
+  def print(space: Space): String = {
+    def go(randomXml: RandomXml): String =
+      randomXml.body match {
+        case Some(children) =>
+          children.value match {
+            case Left(whitSpacedText) => whitSpacedText.value
+            case Right(randomXmls) => randomXmls.map(go).mkString(space.toString)
+          }
+        case None => space.toString
+      }
+
+    go(self)
+  }
 
   def emptyChildren: RandomXml =
     copy(body = None)
@@ -23,7 +37,7 @@ final case class RandomXml(
     val children =
       body match {
         case Some(value) =>
-          value.body match {
+          value.value match {
             case Left(whiteSpacedText) => Chunk(whiteSpacedText.toXmlObjectText)
             case Right(chunkOfTags) => chunkOfTags.map(_.toXmlObject)
           }
@@ -37,7 +51,7 @@ final case class RandomXml(
 
 object RandomXml {
 
-  final case class Children(body: Either[WhiteSpacedText, Chunk[RandomXml]])
+  final case class Children(value: Either[WhiteSpacedText, Chunk[RandomXml]])
 
   def gen(numberOfAttributes: Int, maxNumberOfAttributes: Int) =
     for {
