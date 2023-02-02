@@ -1,5 +1,7 @@
 package com.thaj.xmlparser
 
+import zio.test.Gen
+
 final case class OpenTag(
   whiteSpacedOpenBracket: String,
   text: WhiteSpacedText,
@@ -14,7 +16,7 @@ final case class OpenTag(
 
 object OpenTag {
 
-  def gen(minNumberOfAttributes: Int, maxNumberOfAttributes: Int) =
+  def gen(minNumberOfAttributes: Int, maxNumberOfAttributes: Int): Gen[Any, OpenTag] =
     for {
       start <- Bracket.Open.gen
       attributes <- RandomAttributes.gen(minNumberOfAttributes, maxNumberOfAttributes)

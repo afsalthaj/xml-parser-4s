@@ -10,36 +10,36 @@ object AdditionSpec extends ZIOSpecDefault {
     suite("Xml parser spec")(
       test("test simple with zero attributes") {
         check(
-          Tags.gen(0, 0).noShrink,
+          RandomXml.gen(0, 0).noShrink,
           Space.gen.noShrink
-        ) { (tags, space) =>
+        ) { (randomXml, space) =>
           val config =
-            s"${tags.openTag}$space${tags.closingTag}"
+            s"${randomXml.openTag}$space${randomXml.closingTag}"
 
           val parsed = XmlParser.parse(config)
 
-          assert(parsed)(isRight)
+          assert(parsed)(equalTo(Right(randomXml.emptyChildren.toXmlObject)))
         }
       },
       test("test simple with attributes") {
         check(
-          Tags.gen(1, 10).noShrink,
+          RandomXml.gen(1, 10).noShrink,
           Space.gen.noShrink
-        ) { (tags, space) =>
+        ) { (randomXml, space) =>
           val config =
-            s"${tags.openTag}$space${tags.closingTag}"
+            s"${randomXml.openTag}$space${randomXml.closingTag}"
 
           val parsed = XmlParser.parse(config)
 
-          assert(parsed)(isRight)
+          assert(parsed)(equalTo(Right(randomXml.emptyChildren.toXmlObject)))
         }
       },
       test("test simple with or without attributes, and with or without children") {
         check(
-          Tags.gen(1, 10).noShrink,
+          RandomXml.gen(1, 10).noShrink,
           Space.gen.noShrink
-        ) { (tags, space) =>
-          def print(tags: Tags): String = tags.body match {
+        ) { (randomXml, space) =>
+          def print(randomXml: RandomXml): String = randomXml.body match {
             case Some(value) =>
               value.body match {
                 case Left(value) => value.value
@@ -49,12 +49,12 @@ object AdditionSpec extends ZIOSpecDefault {
           }
 
           val config =
-            s"${tags.openTag}$space${print(tags)}$space${tags.closingTag}"
+            s"${randomXml.openTag}$space${print(randomXml)}$space${randomXml.closingTag}"
 
           val parsed = XmlParser.parse(config)
+          val expected = randomXml.toXmlObject
 
-          println(parsed)
-          assert(parsed)(isRight)
+          assert(parsed)(equalTo(Right(expected)))
         }
       }
     )

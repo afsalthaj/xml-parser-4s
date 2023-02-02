@@ -2,8 +2,11 @@ package com.thaj.xmlparser
 
 import zio.test.Gen
 
-final case class WhiteSpacedText(value: String) {
-  override def toString: String = value
+final case class WhiteSpacedText(preSpace: Space, value: String, postSpace: Space) {
+  override def toString: String = s"$preSpace$value$postSpace"
+
+  def toXmlObjectText: XmlObject =
+    XmlObject.Text(value)
 }
 
 object WhiteSpacedText {
@@ -15,9 +18,8 @@ object WhiteSpacedText {
     for {
       start <- Space.gen(minPreSpace)
       stop <- Space.gen(minPostSpace)
-      chars <- Gen.chunkOfN(30)(Gen.char)
+      chars <- Gen.chunkOfN(30)(Gen.const('a'))
       text = chars.filterNot(InvalidTextCharacters.list.contains).mkString.trim
-      withSpaces = s"$start$text$stop"
-    } yield WhiteSpacedText(withSpaces)
+    } yield WhiteSpacedText(start, text, stop)
 
 }
