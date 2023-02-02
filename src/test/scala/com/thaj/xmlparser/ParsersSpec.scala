@@ -53,6 +53,7 @@ object AdditionSpec extends ZIOSpecDefault {
 
           val parsed = XmlParser.parse(config)
 
+          println(parsed)
           assert(parsed)(isRight)
         }
       }
