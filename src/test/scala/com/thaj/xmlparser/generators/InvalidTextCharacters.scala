@@ -1,6 +1,7 @@
-package com.thaj.xmlparser
+package com.thaj.xmlparser.generators
 
 object InvalidTextCharacters {
+
   val list =
     List('<', '>')
 

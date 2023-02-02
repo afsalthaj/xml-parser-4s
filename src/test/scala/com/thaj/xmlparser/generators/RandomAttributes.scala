@@ -1,6 +1,7 @@
-package com.thaj.xmlparser
+package com.thaj.xmlparser.generators
 
-import com.thaj.xmlparser.RandomAttributes.RandomAttribute
+import com.thaj.xmlparser.XmlObject
+import com.thaj.xmlparser.generators.RandomAttributes.RandomAttribute
 import zio.Chunk
 import zio.test.Gen
 

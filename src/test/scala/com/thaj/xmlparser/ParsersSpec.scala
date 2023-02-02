@@ -1,14 +1,14 @@
 package com.thaj.xmlparser
 
+import com.thaj.xmlparser.generators.{RandomXml, Space}
 import zio.test._
 import zio.test.Assertion._
-import zio.test._
 
 object AdditionSpec extends ZIOSpecDefault {
 
   def spec =
     suite("Xml parser spec")(
-      test("test simple with zero attributes") {
+      test("test xml with zero children and with zero attributes") {
         check(
           RandomXml.gen(0, 0).noShrink,
           Space.gen.noShrink
@@ -21,7 +21,7 @@ object AdditionSpec extends ZIOSpecDefault {
           assert(parsed)(equalTo(Right(randomXml.emptyChildren.toXmlObject)))
         }
       },
-      test("test simple with attributes") {
+      test("test xml with attributes with no children") {
         check(
           RandomXml.gen(1, 10).noShrink,
           Space.gen.noShrink
@@ -34,7 +34,8 @@ object AdditionSpec extends ZIOSpecDefault {
           assert(parsed)(equalTo(Right(randomXml.emptyChildren.toXmlObject)))
         }
       },
-      test("test simple with or without attributes, and with or without children") {
+      // The round trip test that test any XML!
+      test("test any xml with or without attributes, with or without children") {
         check(
           RandomXml.gen(1, 10).noShrink,
           Space.gen.noShrink

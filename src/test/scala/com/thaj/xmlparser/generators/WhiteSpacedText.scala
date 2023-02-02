@@ -1,5 +1,6 @@
-package com.thaj.xmlparser
+package com.thaj.xmlparser.generators
 
+import com.thaj.xmlparser.XmlObject
 import zio.test.Gen
 
 final case class WhiteSpacedText(preSpace: Space, value: String, postSpace: Space) {

@@ -1,7 +1,8 @@
-package com.thaj.xmlparser
+package com.thaj.xmlparser.generators
 
-import com.thaj.xmlparser.RandomXml.Children
+import com.thaj.xmlparser.XmlObject
 import com.thaj.xmlparser.XmlObject.TagElement
+import com.thaj.xmlparser.generators.RandomXml.Children
 import zio.Chunk
 import zio.test.Gen
 

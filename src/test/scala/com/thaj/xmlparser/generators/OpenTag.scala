@@ -1,4 +1,4 @@
-package com.thaj.xmlparser
+package com.thaj.xmlparser.generators
 
 import zio.test.Gen
 
