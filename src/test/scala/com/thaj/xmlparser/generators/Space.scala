@@ -27,11 +27,11 @@ object Space {
 
   def gen(minSpace: Int): Gen[Any, Space] =
     for {
-      totalReturn <- Gen.int(minSpace, 1).map(Return)
-      totalTab <- Gen.int(minSpace, 1).map(Tab)
-      totalNextLine <- Gen.int(minSpace, 1).map(NextLine)
-      totalWhiteSpace <- Gen.int(minSpace, 1).map(WhiteSpace)
-      spaces <- Gen.chunkOfBounded(minSpace, 2)(
+      totalReturn <- Gen.int(minSpace, 10).map(Return)
+      totalTab <- Gen.int(minSpace, 10).map(Tab)
+      totalNextLine <- Gen.int(minSpace, 10).map(NextLine)
+      totalWhiteSpace <- Gen.int(minSpace, 10).map(WhiteSpace)
+      spaces <- Gen.chunkOfBounded(minSpace, 10)(
         Gen.oneOf(Gen.const(totalNextLine), Gen.const(totalWhiteSpace))
       )
     } yield Multiple(spaces)

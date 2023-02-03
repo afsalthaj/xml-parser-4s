@@ -29,8 +29,6 @@ object XmlParserSpec extends ZIOSpecDefault {
           val config =
             xmlWithAttributes.printWith(space)
 
-          println(config)
-
           val parsed = XmlParser.parse(config)
 
           assert(parsed)(equalTo(Right(xmlWithAttributes.toXmlObject)))
