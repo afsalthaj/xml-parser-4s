@@ -3,9 +3,9 @@ package com.thaj.xmlparser.generators
 import zio.test.Gen
 
 final case class WhiteSpacedClosingTag(
-                                        openBracket: WhiteSpacedBracket.SlashedOpen,
-                                        internalText: WhiteSpacedText,
-                                        closedBracket: WhiteSpacedBracket.Closed
+  openBracket: WhiteSpacedBracket.SlashedOpen,
+  internalText: WhiteSpacedText,
+  closedBracket: WhiteSpacedBracket.Closed
 ) {
 
   def print: String =

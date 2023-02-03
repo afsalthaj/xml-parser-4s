@@ -14,9 +14,7 @@ object XmlParserSpec extends ZIOSpecDefault {
           Space.gen.noShrink
         ) { (simpleXml, space) =>
           val config =
-            simpleXml.print(space)
-
-          println(config)
+            simpleXml.printWith(space)
 
           val parsed = XmlParser.parse(config)
 
@@ -29,7 +27,7 @@ object XmlParserSpec extends ZIOSpecDefault {
           Space.gen.noShrink
         ) { (xmlWithAttributes, space) =>
           val config =
-            xmlWithAttributes.print(space)
+            xmlWithAttributes.printWith(space)
 
           println(config)
 
@@ -45,7 +43,7 @@ object XmlParserSpec extends ZIOSpecDefault {
           Space.gen.noShrink
         ) { (anyXml, space) =>
           val config =
-            anyXml.print(space)
+            anyXml.printWith(space)
 
           val parsed = XmlParser.parse(config)
           val expected = anyXml.toXmlObject

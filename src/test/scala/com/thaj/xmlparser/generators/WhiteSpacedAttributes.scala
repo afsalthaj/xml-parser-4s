@@ -28,10 +28,13 @@ object WhiteSpacedAttributes {
   ) {
 
     def toAttribute: XmlObject.Attribute =
-      (key.value, value.value)
+      (key.value, value.value.drop(1).dropRight(1))
 
-    def print: String =
-      Printer.print(key.print, "=", "\"", value.print, "\"")
+    def print: String = {
+      val result = Printer.print(key.print, "=", value.print)
+
+      result
+    }
   }
 
   object RandomAttribute {
@@ -40,11 +43,16 @@ object WhiteSpacedAttributes {
       for {
         start <- Space.gen(0)
         stop <- Space.gen(0)
-        key <- Gen.chunkOfN(30)(Gen.char)
-        validKey = key.filterNot(List('<', '>', '=').contains).mkString
+        key <- Gen.chunkOfN(30)(Gen.alphaNumericChar)
+        validKey = key.filterNot(List('<', '>', '=', ' ').contains).mkString
         spacedKey = WhiteSpacedText(start, validKey, stop)
-        value <- Gen.chunkOfN(30)(Gen.char)
-        spacedValue = WhiteSpacedText(start, value.mkString, stop)
+        rawValue <- Gen.chunkOfN(30)(Gen.alphaNumericChar)
+        valueWithSpaceInsideQuotes = Printer.print(
+          "\"",
+          Printer.print(start.print, rawValue.mkString, stop.print),
+          "\""
+        )
+        spacedValue = WhiteSpacedText(start, valueWithSpaceInsideQuotes, stop)
       } yield RandomAttribute(spacedKey, spacedValue)
   }
 }

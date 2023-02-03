@@ -3,10 +3,10 @@ package com.thaj.xmlparser.generators
 import zio.test.Gen
 
 final case class WhiteSpacedOpenTag(
-                                     whiteSpacedOpenBracket: WhiteSpacedBracket.Open,
-                                     text: WhiteSpacedText,
-                                     attributes: WhiteSpacedAttributes,
-                                     whiteSpacedClosingBracket: WhiteSpacedBracket.Closed
+  whiteSpacedOpenBracket: WhiteSpacedBracket.Open,
+  text: WhiteSpacedText,
+  attributes: WhiteSpacedAttributes,
+  whiteSpacedClosingBracket: WhiteSpacedBracket.Closed
 ) {
 
   def print: String =

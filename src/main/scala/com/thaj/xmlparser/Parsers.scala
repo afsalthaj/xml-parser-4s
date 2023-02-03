@@ -30,7 +30,10 @@ trait Parsers {
     Parser
       .charNotIn(' ', '=')
       .repeat
-      .map(_.mkString.trim)
+      .map(v => {
+        v.mkString.trim
+      })
+
 
   lazy val attributeValueParser: Parser[String, Char, String] =
     stringLiteral

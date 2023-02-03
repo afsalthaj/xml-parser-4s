@@ -12,7 +12,7 @@ final case class WhiteSpacedXml(
   closingTag: WhiteSpacedClosingTag
 ) { self =>
 
-  def print(space: Space): String =
+  def printWith(space: Space): String =
     Printer.print(
       self.openTag.print,
       space.print,
@@ -27,7 +27,7 @@ final case class WhiteSpacedXml(
         case Some(children) =>
           children.value match {
             case Left(whitSpacedText) => whitSpacedText.value
-            case Right(randomXmls) => randomXmls.map(_.print(space)).mkString(space.print)
+            case Right(randomXmls) => randomXmls.map(_.printWith(space)).mkString(space.print)
           }
         case None => space.print
       }
