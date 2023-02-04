@@ -6,7 +6,7 @@ import zio.parser.Parser
 
 object XmlParser extends Parsers {
 
-  lazy val tagContent: Parser[String, Char, Option[Chunk[XmlObject]]] =
+  lazy private val tagContent: Parser[String, Char, Option[Chunk[XmlObject]]] =
     xmlParser.repeat
       .orElseEither(textParser.zip(ws).map(Chunk(_)))
       .map(_.merge)
