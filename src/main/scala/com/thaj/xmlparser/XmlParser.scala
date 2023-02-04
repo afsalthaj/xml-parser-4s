@@ -51,42 +51,42 @@ object XmlParser extends Parsers {
 
 object TestApp extends App {
 
-  println(
-    attributeParser
-      .parseString("key=\"value\"")
-  )
-
-  val str =
-    s"""
-       |
-       |<head key=\"value\" key=\"value2\"> hello </head>
-       |
-       |""".stripMargin
-
-  println(
-    xmlParser
-      .parseString(str)
-  )
-
-  val nextTest =
-    s"""
-       | <simpletag a = "a">
-       |   <sub1>
-       |     text1
-       |   </sub1>
-       |   <sub2 a = "b">
-       |      text2
-       |   </sub2>
-       |   <sub3 a = "c">
-       |     text3
-       |   </sub3>
-       | </simpletag>
-       |
-       |
-       |
-       |""".stripMargin
-
-  println(xmlParser.parseString(nextTest).map(_.flattened))
+//  println(
+//    attributeParser
+//      .parseString("key=\"value\"")
+//  )
+//
+//  val str =
+//    s"""
+//       |
+//       |<head key=\"value\" key=\"value2\"> hello </head>
+//       |
+//       |""".stripMargin
+//
+//  println(
+//    xmlParser
+//      .parseString(str)
+//  )
+//
+//  val nextTest =
+//    s"""
+//       | <simpletag a = "a">
+//       |   <sub1>
+//       |     text1
+//       |   </sub1>
+//       |   <sub2 a = "b">
+//       |      text2
+//       |   </sub2>
+//       |   <sub3 a = "c">
+//       |     text3
+//       |   </sub3>
+//       | </simpletag>
+//       |
+//       |
+//       |
+//       |""".stripMargin
+//
+//  println(xmlParser.parseString(nextTest).map(_.flattened))
 
 //  Right(
 //    HashMap(
@@ -99,42 +99,39 @@ object TestApp extends App {
 //    )
 //  )
 
-  val html =
-    s"""
-       |<aa\\<aa
-       |aaa
-       |="aaa"
-       |
-       |
-       |></aa\\<aa
-       |>
-       |
-       |""".stripMargin
-
+//  val html =
+//    s"""
+//       |<aa\\<aa
+//       |aaa
+//       |="aaa"
+//       |
+//       |
+//       |></aa\\<aa
+//       |>
+//       |
+//       |""".stripMargin
+//
   val html_ = {
-    s"""
-     |<
-     |挺첈렑豗ཪ䯏ᥩ璲ᢆ뻪ᜏ눪跿襍勍ꇌ쩊ছ填説漹뮰퓃谼?న
-     |   꿒贗ꁖൗﶵ￫펩ꦶ伕臵첉ൊ奓ɿẲꯕԪ肨䱸川鈷?䄉?賱⦈="  鰾䔢힪谽玧잴䂴⚊㧲㧂᫴燫妥쳗뗷詵?㫁里?9?ᷤ?﨓쉁雨"
+
+  s"""
+     |\t\n\r
+     |<\t\n\rbody\t\n\r>
+     |  <\t\n\rconfig\t\n\r>
+     |    <\t\n\rkey1\t\n\r>value1</key1\t\n\r>
+     |    <\t\n\rkey2\t\n\r>value2</key2\t\n\r>
+     |  </config\t\n\r>
+     |  \t\n\r
+     |</body\t\n\r>
+     |\t\n\r
      |
-     |
-     |㽔軙넓㙣?ᛥᨛᑃ텽䩕⺳齂鋓㴋秏鋬湹?谨ʝ갬፸ଳ䊈禆褺ㅛ俅䊠 ="
-     |?j燫⊚࣠콜਍灎ꝁ瓗缯쇏姐呒疗옵䦽㺎ە捕՗권웅롓䘀?巄㫫 " 
-     |曌ⷋ埯⑐ⰺꮸ엌嵚痼᢫輻⾯旿⾇㋭ኵ俶ꅽ脏ẹ䷰䭂⣘꺄⸛ṋ؟ ="
-     |䅋讆殫삓鼊魪꙽莧㛷⁋题圌遲岖啘쬭㞗暬폺髯珡隁蒳ꈤ択뿲 "  
-     |ᒞ暐ᏻ箲墝ⷽ핂깅⛼ࣸὲ웅껬浧홌ୖ뜕壆辙և뀭裐⏌焤䕗쒥篎岈Ⰶ  ="
-     |뤌苩ᵦ㱧킫줤?岧晅㭦ꪊ⻨矘?㯩侽쟽ۓ윆唑ⷉ䧷?듐囥埳৹꼏뢡  " 
-     | 촘砏꧹抭畸윱࿆㮋벘빶絖ᴟ뵏ﾹ璆૩⺾ᵟ㜹花踊躀贊磄佴牽=" ⒝⇤豶씒뺾㦆忡ⵋﮏ贈㪘ᔉ幪擖텏挄㭋?经弴鼉쿘Ų瑚鰿醾뼰" 
-     |
-     |> 
-     |
-     |
-     |</
-     |挺첈렑豗ཪ䯏ᥩ璲ᢆ뻪ᜏ눪跿襍勍ꇌ쩊ছ填説漹뮰퓃谼?న >
      |""".stripMargin
 
 
   }
+
+  println(html_)
   println(xmlParser.parseString(html_))
+
+  println(Parser.charNotIn('"').repeat0.parseString("\rsghbn"))
 
 }

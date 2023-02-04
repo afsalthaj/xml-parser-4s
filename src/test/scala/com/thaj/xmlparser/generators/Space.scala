@@ -1,5 +1,6 @@
 package com.thaj.xmlparser.generators
 
+import com.thaj.xmlparser.Parsers
 import zio.Chunk
 import zio.test.Gen
 
@@ -20,25 +21,20 @@ sealed trait Space {
     }
 }
 
-object Space {
+object Space extends Parsers{
 
   val gen: Gen[Any, Space] =
     gen(0)
 
   def gen(minSpace: Int): Gen[Any, Space] =
     for {
-      totalReturn <- Gen.int(minSpace, 10).map(Return)
-      totalTab <- Gen.int(minSpace, 10).map(Tab)
-      totalNextLine <- Gen.int(minSpace, 10).map(NextLine)
-      totalWhiteSpace <- Gen.int(minSpace, 10).map(WhiteSpace)
+      totalSpaces <- Gen.int(minSpace, 10)
+
       spaces <- Gen.chunkOfBounded(minSpace, 10)(
-        Gen.oneOf(Gen.const(totalNextLine), Gen.const(totalWhiteSpace))
+        Gen.oneOf(UnicodeEmptyCharacters.map(Gen.const(_)) :_*)
       )
     } yield Multiple(spaces)
 
-  final case class NextLine(total: Int) extends Space
-  final case class Return(total: Int) extends Space
-  final case class Tab(total: Int) extends Space
-  final case class WhiteSpace(total: Int) extends Space
+  final case class WhiteSpace(total: Int, char: Char) extends Space
   final case class Multiple(spaces: Chunk[Space]) extends Space
 }
