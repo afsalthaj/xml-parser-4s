@@ -3,7 +3,7 @@
 A highly simplified xml-parser, that it may not solve whole of RFC, but just works for you if you 
 consider xml as your config.
 
-The libraty is mainly made to avoid external library dependencies
+The library is mainly made to avoid external library dependencies
 in zio-config. 
 
 The parser will be designed
