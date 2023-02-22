@@ -2,7 +2,7 @@ package com.thaj.xmlparser
 
 import zio.Chunk
 
-// To be moved to zio-parser
+// To be moved to zio-config
 sealed trait XmlObject {
 
   def flattened: Map[Chunk[KeyComponent], String] = {
