@@ -8,7 +8,7 @@ in zio-config.
 
 The parser will be designed
 in a way to work seamlessly with zio-config's `IndexedFlat` and other
-language assumptions. The parser will be moved to zio-parser library.
+language assumptions. The parser will be moved to zio-config library.
 
 In a nutshell, a xml parsed object is as simple as
 
